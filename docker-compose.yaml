@@ -1,0 +1,32 @@
+version: '2.1'
+
+services:
+    web:
+        image: nginx:latest
+        ports:
+            - "8080:80"
+        volumes:
+            - ./:/code
+            - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+        links:
+            - php
+            - mysql
+    php:
+        image: php
+        build: ./
+        volumes:
+            - ./:/code
+    mysql:
+        image: mysql
+        volumes:
+            - ./mysql:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: admin
+        ports:
+            - 3307:3306
+    adminer:
+        image: adminer
+        ports:
+            - 8085:8080
+        links:
+            - mysql
